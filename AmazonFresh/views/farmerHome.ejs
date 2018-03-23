@@ -1,0 +1,1144 @@
+<html>
+<head>
+<title>Amazon Fresh | Home </title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="shortcut icon"
+	href="https://images-na.ssl-images-amazon.com/images/G/01/omaha/images/ui/favicon.ico"
+	type="image/vnd.microsoft.icon" />
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link href="/css/style.css" rel="stylesheet" type="text/css" media="all"/>
+<link href="/css/slider.css" rel="stylesheet" type="text/css" media="all"/>
+<script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script> 
+<script type="text/javascript" src="/js/move-top.js"></script>
+<script type="text/javascript" src="/js/easing.js"></script>
+<script type="text/javascript" src="/js/startstop-slider.js"></script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/js/ng-file-upload-shim.js"></script> <!-- for no html5 browsers support -->
+	<script type="text/javascript" src="/js/ng-file-upload.js"></script>
+	<script type="text/javascript" src="/js/ng-file-upload-all.js"></script>
+	<script type="text/javascript" src="/js/FileAPI.js"></script>
+	
+	<style type="text/css">
+	a
+	{
+		cursor: pointer;
+	}
+	.hname{
+	    font-size:22px; 
+		color: #000;
+	   }
+      .footer {
+      background-color: #333;
+      width: 100%;
+      bottom: 0;
+      position: fixed;
+      height: 52px;
+      }
+	  .pad
+	  {
+	  	padding: 10px 0px 10px 0px !important;
+	  }
+   .form-left {
+   margin-left: 86px !important;
+   pading-bottom:10px !important;
+   }
+	.red-btn
+	   {
+	   background-color: #ff0000 !important;
+	    border: #ff0000 !important;
+	   }      .but1{
+      margin-top: 25px;}
+      .spnerr{
+      display: block; width: 68%; float: left; margin-top: 6px;
+      }
+.col-mn{
+		  float:left; clear:left; width: 84% !important; margin-top: 25px;
+		  }
+.col-mn1{
+		  float:left; clear:left; width: 26% !important; margin-top: 25px;
+		  }
+.col-mn2{
+		  float:left; clear:left; width: 94% !important; margin-top: 25px;
+		  }
+		  .form-inp
+		  {
+		  display: block; width: 30% !important; float: left;
+		  }   </style>
+
+<script>
+
+var app = angular.module("amazonFresh_fhome_app", ['ngFileUpload']); 
+app.controller("amazonFresh_fhome_controller", ['Upload','$http','$scope','$window',function(Upload,$http,$scope,$window){
+	
+	$scope.fProductList_Show = true;
+	$scope.fProductHeader_Show=true;
+	$scope.productSearch_Show = true;
+	
+	$http({
+		method:'get',
+		url:'/farmerProductList'
+	}).then(function(res){
+		if(res.data.status == "200"){
+			
+			//alert(res.data.productArray[0].pName);
+			$scope.productArray = [];
+			for(var i=0;i< res.data.length;i++){
+				$scope.productArray[i] = {"pName":res.data.productArray[i].pName,"pDesc":res.data.productArray[i].pDesc,"pPrice":res.data.productArray[i].pPrice,"pImage":res.data.productArray[i].pImage,"pID":res.data.productArray[i].pID};
+			}
+		}else{
+			$window.location.href = '/';
+		}
+		
+	});	
+	
+	$scope.genericShow=function(){
+		$scope.productSearch_Show=false;
+		$scope.fProductHeader_Show=false;
+		$scope.fProductList_Show=false;
+		$scope.fUpdateDetailsForm_Show=false;
+		$scope.fUpdateProduct_Show=false;
+		$scope.fPasswordUpdate_Show = false;
+		$scope.fAddProduct_Show = false;
+		$scope.file_Show=false;
+		$scope.farmerProfile_Show = false;
+	}
+	
+	$scope.genericValue=function(){
+		$scope.farmer={"1":"1"};
+		$scope.password={"1":"1"};
+		$scope.farmerPasswordForm.$setPristine();
+		$scope.product={"1":"1"};
+		$scope.productForm.$setPristine();
+	}
+	
+	$scope.farmerDetails=function(){
+		$scope.genericShow();
+		$scope.genericValue();
+	 	$http({
+			method:'get',
+			url:'/farmerDetails'
+		}).then(function(res){
+			if(res.data.status == "200"){
+				$scope.farmerAddress = res.data.farmerDetails.fAddress+", "+res.data.farmerDetails.fCity+", "+res.data.farmerDetails.fState+" - "+res.data.farmerDetails.fZip; 
+				$scope.farmer={"fSSN":res.data.farmerDetails.fSSN,"fEmail":res.data.farmerDetails.fEmail,"fFirstName":res.data.farmerDetails.fFirstName,"fLastName":res.data.farmerDetails.fLastName,"fPhoneNumber":res.data.farmerDetails.fPhoneNumber,"fAddress":res.data.farmerDetails.fAddress,"fCity":res.data.farmerDetails.fCity,"fState":res.data.farmerDetails.fState,"fZip":res.data.farmerDetails.fZip, "fVideo":"http://127.0.0.1:3000/uploads/videos/"+res.data.farmerDetails.fVideo};
+				var player = document.getElementById('videoPlayer');
+				var mp4Vid = document.getElementById('mp4Source');
+				player.pause();
+				$(mp4Vid).attr('src', $scope.farmer.fVideo);
+				player.load();
+				$scope.fUpdateDetailsForm_Show = true;
+				$scope.farmerProfile_Show = true;
+			}
+		});	
+	}
+	
+	$scope.farmerUpdateDetails=function(){
+		var serverData = {"farmerDetails":$scope.farmer}
+		$http({
+			method:'post',
+			url:'/farmerUpdateDetails',
+			data:serverData
+		}).then(function(res){
+			if(res.data.status == "200"){
+				alert("Farmer Details Updated Successfully");
+				$scope.farmer={"fSSN":res.data.farmerDetails.fSSN,"fEmail":res.data.farmerDetails.fEmail,"fFirstName":res.data.farmerDetails.fFirstName,"fLastName":res.data.farmerDetails.fLastName,"fPhoneNumber":res.data.farmerDetails.fPhoneNumber,"fAddress":res.data.farmerDetails.fAddress,"fCity":res.data.farmerDetails.fCity,"fState":res.data.farmerDetails.fState,"fZip":res.data.farmerDetails.fZip,"fVideo":"http://127.0.0.1:3000/uploads/videos/"+res.data.farmerDetails.fVideo};
+				var player = document.getElementById('videoPlayer');
+				var mp4Vid = document.getElementById('mp4Source');
+				player.pause();
+				$(mp4Vid).attr('src', $scope.farmer.fVideo);
+				player.load();
+			}else{
+				$scope.serverError = res.data.msg;
+			}
+		});
+	}
+	
+	$scope.farmerDeleteAccount=function(){
+		var serverData = {"fEmail":$scope.farmerDetails.fEmail}
+		$http({
+			method:'post',
+			url:'/farmerDeleteAccount',
+			data:serverData
+		}).then(function(res){
+			if(res.data.status == "200"){
+				alert(res.data.msg);
+				//console.log(res.data.msg);
+				$scope.logout();
+				}else{
+				$scope.serverError = res.data.msg;
+			}
+		});
+	}
+	
+	$scope.passwordShow=function(){
+		$scope.genericShow();
+		$scope.genericValue();
+		$scope.fPasswordUpdate_Show = true;
+		$scope.fUpdateDetailsForm_Show = false;
+	}
+	
+	$scope.passwordUpdate = function(){
+		
+		var serverData = {"farmerDetails":$scope.password}
+		$http({
+			method:'post',
+			url:'/farmerUpdatePassword',
+			data:serverData
+		}).then(function(res){
+			if(res.data.status == "200"){
+				alert("Password Details Changed Successfully, Please Login to Continue");
+				$scope.logout();
+			}else{
+				$scope.serverPasswordError = res.data.msg;
+			}
+		});
+		
+	}
+	
+	$scope.farmerAddProduct=function(){
+		$scope.genericShow();
+		$scope.genericValue();
+		$scope.fAddProduct_Show = true;
+	}
+	
+	$scope.home=function(){
+		$scope.genericShow();
+		$scope.genericValue();
+		$scope.fProductList_Show = true;
+		$scope.productList();
+	}
+	$scope.addProduct=function(){
+		
+		//***************************************************************************************************************************************************************************//	
+				console.log("inside addProduct: "+$scope.productForm.imageFile.$valid && $scope.file);
+				if ($scope.productForm.imageFile.$valid && $scope.file) { //check if from is valid
+					console.log("inside addProduct with file: "+$scope.file);
+				
+				//alert("discount" + $scope.discountSelected);
+				var discountedPrice;
+				 if(typeof($scope.discountSelected) == "undefined"){
+					// alert("in if " + $scope.discountSelected);
+					discountedPrice = $scope.product.pPrice1;
+				
+				} else{
+					//alert("in else" + $scope.discountSelected);
+					 discountedPrice = parseFloat($scope.product.pPrice1)- ((parseFloat($scope.discountSelected)/100) * parseFloat($scope.product.pPrice1));
+					discountedPrice = discountedPrice.toFixed(2);
+				
+					}
+					//alert("discounted price " + discountedPrice)
+					var productDetails = {"pName":$scope.product.pName1,"pPrice":$scope.product.pPrice1,"pDesc":$scope.product.pDesc1, "pDiscount": $scope.discountSelected, "discountedPrice": discountedPrice};
+					var serverData = {"productDetails":productDetails,"file":$scope.file}
+					Upload.upload({
+						
+						method:'post',
+						url:'/addProduct',
+						data:serverData
+					}).then(function(res){
+						if(res.data.status == "200"){
+							 //$window.alert('Success ' + res.config.data.file.name + 'uploaded. Response: ');
+							alert(res.data.msg);
+							$scope.productList();
+						}else{
+							 //$window.alert("error is: "+res.data.error_desc);
+							alert(res.data.msg);
+						}
+					});
+				}
+	}
+	
+/* 
+	$scope.updateProduct = function(){
+		
+		alert("1");
+		
+		console.log("inside addProduct: "+$scope.productForm.imageFile.$valid && $scope.file);
+		if ($scope.productForm.imageFile.$valid && $scope.file) { //check if from is valid
+			alert("inside addProduct with file: "+$scope.file);
+			var productDetails = {"pName":$scope.product.pName2,"pPrice":$scope.product.pPrice2,"pDesc":$scope.product.pDesc2,"pID":$scope.product.pID2};
+			var serverData = {"productDetails":productDetails,"file":$scope.file}
+			Upload.upload({
+				
+				method:'post',
+				url:'/updateProduct',
+				data:serverData
+			}).then(function(res){
+				if(res.data.status == "200"){
+					 $window.alert('Success ' + res.config.data.file.name + 'uploaded. Response: ');
+					alert(res.data.msg);
+					$scope.productList();
+				}else{
+					 $window.alert("error is: "+res.data.error_desc);
+					alert(res.data.msg);
+				}
+			});
+		}
+	} */
+	
+	
+$scope.updateProduct = function(){
+		//alert("123");
+		console.log("inside addProduct: "+$scope.productForm.imageFile.$valid && $scope.file);
+		if ($scope.productUpdateForm.imageFile.$valid && $scope.file) { //check if from is valid
+			//alert("1234");
+			//console.log("inside addProduct with file: "+$scope.file);
+			var productDetails = {"pName":$scope.product.pName2,"pPrice":$scope.product.pPrice2,"pDesc":$scope.product.pDesc2,"pID":$scope.product.pID2};
+			var serverData = {"productDetails":productDetails,"file":$scope.file}
+			Upload.upload({
+				
+				method:'post',
+				url:'/updateProduct',
+				data:serverData
+			}).then(function(res){
+				if(res.data.status == "200"){
+					 //$window.alert('Success ' + res.config.data.file.name + 'uploaded. Response: ');
+					alert(res.data.msg);
+					$scope.productList();
+				}else{
+					 //$window.alert("error is: "+res.data.error_desc);
+					alert(res.data.msg);
+				}
+			});
+		}
+	}
+	
+	
+	$scope.productList = function(){
+		$scope.genericShow();
+		$scope.genericValue();
+		$http({
+			method:'get',
+			url:'/farmerProductList'
+		}).then(function(res){
+			if(res.data.status == "200"){
+				$scope.fProductList_Show = true;
+				$scope.fProductHeader_Show=true;
+				$scope.productSearch_Show = true;
+				$scope.productArray = [];
+				for(var i=0;i< res.data.length;i++){
+					$scope.productArray[i] = {"pName":res.data.productArray[i].pName,"pDesc":res.data.productArray[i].pDesc,"pPrice":res.data.productArray[i].pPrice,"pImage":res.data.productArray[i].pImage,"pID":res.data.productArray[i].pID};
+				}
+			}
+		});	
+	}
+	
+	$scope.farmerDeletProduct=function(prductID){
+		
+		var serverData = {"pID":prductID};	
+		$http({
+			method:'post',
+			url:'/farmerDeletProduct',
+			data:serverData
+		}).then(function(res){
+			if(res.data.status == "200"){
+				alert(res.data.msg);
+				$scope.productList();
+			}else{
+				alert(res.data.msg);
+			}
+		});
+	}
+	
+	$scope.farmerGetProductDetails = function(prductID){
+		$scope.genericShow();
+		$scope.genericValue();
+		var serverData = {"pID":prductID};	
+		$http({
+			method:'post',
+			url:'/farmerGetProductDetails',
+			data:serverData
+		}).then(function(res){
+			if(res.data.status == "200"){
+				$scope.product = {"pName2":res.data.productDetails.pName,"pPrice2":res.data.productDetails.pPrice,"pDesc2":res.data.productDetails.pDesc,"pID2":res.data.productDetails.pID,"pReviewRatings2":res.data.productDetails.pReviewRatings};
+				$scope.fUpdateProduct_Show=true;
+			}else{
+				alert(res.data.msg);
+			}
+		});
+	}
+	
+	$scope.getfile=function(prductID){
+		$scope.genericShow();
+		$scope.genericValue();
+		var serverData = {"pID":prductID};	
+		$http({
+			method:'post',
+			url:'/farmerGetProductDetails',
+			data:serverData
+		}).then(function(res){
+			if(res.data.status == "200"){
+				$scope.file_Show=true;
+				$scope.product = {"pName3":res.data.productDetails.pName,"pPrice3":res.data.productDetails.pPrice,"pDesc3":res.data.productDetails.pDesc,"pID3":res.data.productDetails.pID,"pImage3":res.data.productDetails.pImage,"pReviewRatings3":res.data.productDetails.pReviewRatings,"pAvgRatings3":res.data.productDetails.pAvgRatings};
+			}else{
+				alert(res.data.msg);
+			}
+		});
+	}
+	
+	$scope.filter = {};
+	
+	$scope.changedValue=function(){
+		$scope.filter = $scope.searchBy;
+	}
+	
+	$scope.search = {
+			
+			pName:'',pID:'',pPrice:'',pDesc:''
+			
+	};
+	
+	$scope.orderByMe = function(x) {
+		$scope.myOrderBy = x;
+	}
+		
+	$scope.currentPage = 0;
+	$scope.pageSize = 20;
+	$scope.numberOfPages=function(arrPassed){
+		return Math.ceil(arrPassed.length/$scope.pageSize);                
+	}
+	
+	 $scope.logout = function(){
+			$http({
+				method:'get',
+				url:'/sessionEnd'
+				}).then(function(res){
+				if(res.data.status == "200"){
+					$window.location.href = '/';
+				}else{
+					alert("error in logging out!");
+				}
+			});
+		} 
+}]);
+
+app.filter('startFrom', function() {
+    return function(input, start) {
+        start = +start; //parse to int
+        return input.slice(start);
+    }
+});
+
+</script>
+
+</head>
+
+<body ng-app="amazonFresh_fhome_app" ng-controller="amazonFresh_fhome_controller">
+    <div style="width:100%;background-image: url(/images/strip.png);">
+	<p><a ng-click="productList();"><img src="/images/logo.png" style="margin-left:1%;margin-top: 0.5%;margin-bottom: 0.5%;"alt="Amazon Fresh" /></a>
+            <a ng-click="logout()" style='float: right;margin-right: 3%;margin-top: 1%;color: whitesmoke;'>Sign Out</a>
+        </p>
+    </div>
+  <div class="wrap" style="width:95%">
+      
+	<div class="header">
+		
+		<div class="header_top">
+			
+			 
+			  <script type="text/javascript">
+			function DropDown(el) {
+				this.dd = el;
+				this.initEvents();
+			}
+			DropDown.prototype = {
+				initEvents : function() {
+					var obj = this;
+
+					obj.dd.on('click', function(event){
+						$(this).toggleClass('active');
+						event.stopPropagation();
+					});	
+				}
+			}
+
+			$(function() {
+
+				var dd = new DropDown( $('#dd') );
+
+				$(document).click(function() {
+					// all dropdowns
+					$('.wrapper-dropdown-2').removeClass('active');
+				});
+
+			});
+
+		</script>
+	 <div class="clear"></div>
+  </div>
+	<div class="header_bottom">
+	     	<div class="menu">
+	     		<ul>
+			    	<li><a ng-click="home()">Home</a></li>
+			    	<li><a ng-click="farmerDetails()">Update Personal Details</a></li>
+			    	<li><a ng-click="farmerAddProduct()">Add Product</a></li>
+			    	<div class="clear"></div>
+     			</ul>
+	     	</div>
+			
+	     	<div class="search_box" ng-show="productSearch_Show">
+	     		<table>
+					<tr>
+					<td>
+						<select ng-model="searchBy" ng-change="changedValue()">
+							<option value="">Search By:</option>
+							<option value="pID">Product ID</option>
+							<option value="pName">Product Name</option>
+							<option value="pPrice">Product Price</option>
+							<option value="pDesc">Product Description</option>
+						</select>
+					</td>
+					<td>
+						<form>
+						
+							<input type="text" ng-model="search[filter]" name="searchPValue" maxlength="30" 
+					autocomplete=off required Placeholder="Search Item Value">
+						
+						</form>
+					</td>
+					
+					</tr>
+				</table>
+	     	</div>
+	     	
+			<div class="clear"></div>
+	     
+		 </div>	     
+	<div class="header_slide">
+			<div class="clear"></div>
+		</div>
+   </div>
+ <div class="main" style="width:92%; margin:0 auto;">
+    <div class="content">
+   <!--   <div ng-show="farmerProfile_Show">
+    	<div class="content_top">
+			<div class="heading">
+				<h3>Farmer Details</h3>
+			</div>
+			<div class="clear"></div>
+		</div>
+    
+    	<div class="section group">
+	<div class="cont-desc span_1_of_2">
+					<div class="product-details">
+						<div class="grid images_3_of_2">
+							<div id="container">
+								<div id="products_example">
+									<div id="products">
+										<div class="slides_container"
+											style="overflow: hidden; position: relative; display: block; width: 320px; height: 276px;">
+											<img src="/uploads/videos/{{farmer.fVideo}}"
+												style="max-height: 275px; min-height: 320px;" />
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="desc span_3_of_2">
+								<p>
+									<span><h2 style="color: #679900;    font-size: 18px;    font-weight: bold;    text-transform: uppercase;">{{farmer.fFirstName}} {{farmer.fLastName}}</h2></span><p>#{{farmer.fSSN}}</p> 
+									Connect @: <span>{{farmer.fEmail}}</span>
+								</p>
+								<p>
+									Meet me @: <span>{{farmerAddress}}</span>
+								</p>
+							<div class="share-desc" align="left">
+								<div class="clear"></div>
+							</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+				</div>
+			</div>
+		</div>    -->
+    
+    	<div class="content_top" ng-show = "fProductHeader_Show">
+    		<div class="heading">
+                    <h3>Products</h3>
+    		</div>
+    		
+    		<div class="clear"></div>
+    	</div>
+	      <div class="section group" id="cProducts" ng-show="fProductList_Show">
+				<div style="width:23%;" class="grid_1_of_4 images_1_of_4" ng-repeat = "product in productArray | filter:search | startFrom:currentPage*pageSize | limitTo:pageSize" ng-init="prductID=product.pID">
+					 <a ><img src="/uploads/images/{{product.pImage}}" alt="{{product.pName}}" width="320" height="240" ng-click="getfile(prductID)"/></a>
+					 	<h2 class="pad" style="height:42px;><a ng-click="getfile(prductID)">{{product.pName}} ( {{prductID}} )</a></h2>
+						<div class="price-details">
+				      		 <div class="price-number">
+								<p><span class="rupees">${{product.pPrice}}</span></p>
+					    	</div>
+					    	<input type="text" ng-show=false ng-model="prductID">
+					       	<div class="add-cart" style="margin-top: -5%;">		
+					       		<h4><a class="button" ng-click="farmerGetProductDetails(prductID)">Update Details</a></h4>						
+								<h4><a class="button red-btn" ng-click="farmerDeletProduct(prductID)">Delete</a></h4>
+							</div>
+							<div class="clear"></div>
+						</div>
+					 
+				</div>
+				<div style="clear:both;">
+					<center><button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">Previous</button>
+					{{currentPage+1}}/{{numberOfPages(productArray)}}
+					<button ng-disabled="currentPage >= productArray.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+					Next </button></center> 
+				</div>
+				
+			</div>
+			<div id="fUpdateDetails" ng-show="fUpdateDetailsForm_Show">
+						
+						<form role="form" id="" name="farmerUpdateForm" class="form-horizontal">
+
+                              <div class="heading form-left">
+                                 <h3><strong>Update Profile</strong> </h3>
+                              </div>
+							
+		                  <div class="form-group form-left">
+
+		                     <div class="col-xs-3 col-mn">
+                        <input class="form-control form-inp" type="text" id="fSSN" name="fSSN" ng-model="farmer.fSSN" autocomplete="on"	autofocus placeholder="Farmer SSN 123-45-5678 *" ng-maxlength=11 ng-minlength=11 maxlength=11 ng-pattern="/^[0-9]{3}\-[0-9]{2}\-[0-9]{4}$/" required>
+                        <span class="spnerr">
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span ng-show="farmerUpdateForm.fSSN.$error.pattern || farmerUpdateForm.fSSN.$error.maxlength || farmerUpdateForm.fSSN.$error.minlength" class="alert alert-warning">SSN must be 9 digit long and contain numbers only</span>
+                        
+                        <span ng-show="farmerUpdateForm.fSSN.$error.required && farmerUpdateForm.fSSN.$dirty" class="alert alert-danger"><strong>SSN</strong> is required</span>
+                        </span>	
+                     </div>
+								
+								
+								<div class="col-xs-3 col-mn">
+									<input class="form-control form-inp" type="text" id="fEmail"
+										 name="fEmail" ng-model="farmer.fEmail" autocomplete="on"
+										  autofocus aria-required="true" placeholder="Email *" 
+										  maxlength=30 ng-pattern="/[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}/" required>
+									<span>
+										<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										<span ng-show="farmerUpdateForm.fEmail.$error.pattern" class="alert alert-warning">Please enter valid email</span>
+    									<span ng-show="farmerUpdateForm.fEmail.$error.required && farmerUpdateForm.fEmail.$dirty" class="alert alert-danger"><strong>Email</strong> is required</span>
+    								</span>	
+								</div>
+								
+								<div class="col-xs-3 col-mn">
+									<input class="form-control form-inp" type="text" id="fFirstName"
+									name="fFirstName" ng-model="farmer.fFirstName" autocomplete="on"
+									autofocus aria-required="true" placeholder="First Name *" 
+									maxlength=20 ng-pattern="/^[A-Za-z ]*$/" required>
+									<span>
+										<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										<span ng-show="farmerUpdateForm.fFirstName.$error.pattern" class="alert alert-warning">First name must contain letters only</span>
+    									<span ng-show="farmerUpdateForm.fFirstName.$error.required && farmerUpdateForm.fFirstName.$dirty" class="alert alert-danger"><strong>First name</strong> is required</span>
+    								</span>	
+								</div>
+									
+								<div class="col-xs-3 col-mn">
+									<input class="form-control form-inp" type="text" id="fLastName"
+									name="fLastName" ng-model="farmer.fLastName" autocomplete="on"
+									autofocus aria-required="true" placeholder="Last Name *" 
+									maxlength=20 ng-pattern="/^[A-Za-z ]*$/" required>
+									<span>
+										<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										<span ng-show="farmerUpdateForm.fLastName.$error.pattern" class="alert alert-warning">Last name must contain letters only</span>
+    									<span ng-show="farmerUpdateForm.fLastName.$error.required && farmerUpdateForm.fLastName.$dirty" class="alert alert-danger"><strong>Last name</strong> is required</span>
+    								</span>	
+								</div>	
+								
+								<div class="col-xs-3 col-mn">
+									<input class="form-control form-inp" type="text"
+										 name="fPhoneNumber" ng-model="farmer.fPhoneNumber" autocomplete="on"
+										  autofocus aria-required="true" placeholder="Phone Number *" 
+										  ng-maxlength=10 ng-minlength=10 maxlength=10 ng-pattern="/[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}/" required>
+									<span>
+										<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										<span ng-show="farmerUpdateForm.fPhoneNumber.$error.pattern || farmerUpdateForm.fPhoneNumber.$error.maxlength || farmerUpdateForm.fPhoneNumber.$error.minlength" class="alert alert-warning">Phone number must be 10 digit long and should contain numbers only</span>
+										<span ng-show="farmerUpdateForm.fPhoneNumber.$error.required && farmerUpdateForm.fPhoneNumber.$dirty" class="alert alert-danger"><strong>Phone number</strong> is required</span>
+    								</span>	
+								</div>		
+								
+								
+								<div class="col-xs-3 col-mn">
+									<input class="form-control form-inp" type="text"
+										 name="fAddress" ng-model="farmer.fAddress" autocomplete="on"
+										  autofocus aria-required="true" placeholder="Address *" 
+										  maxlength=40 ng-pattern="/[A-Za-z0-9. ]/" required>
+									<span>
+										<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+											<span ng-show="farmerUpdateForm.fAddress.$error.required && farmerUpdateForm.fAddress.$dirty" class="alert alert-danger"><strong>Address</strong> is required</span>
+    									</span>
+    								</span>		
+								</div>	
+								
+								<div class="col-xs-3 col-mn">
+									<input class="form-control form-inp" type="text"
+										 name="fCity" ng-model="farmer.fCity" autocomplete="on"
+										  autofocus aria-required="true" placeholder="City *" 
+										  maxlength=20 ng-pattern="/^[A-Za-z ]*$/" required>
+									<span>
+										<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										<span ng-show="farmerUpdateForm.fCity.$error.pattern" class="alert alert-warning">City name must contain letters only</span>
+										<span ng-show="farmerUpdateForm.fCity.$error.required && farmerUpdateForm.fCity.$dirty" class="alert alert-danger"><strong>City name</strong> is required</span>
+    								</span>		
+								</div>	
+								
+<!-- 								<div class="col-xs-3 col-mn">
+									<input class="form-control form-inp" type="text"
+										 name="fState" ng-model="farmer.fState" autocomplete="on"
+										  autofocus aria-required="true" placeholder="State *" 
+										  maxlength=20 ng-pattern="/^[A-Za-z ]*$/" required>
+									<span>
+										<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										<span ng-show="farmerUpdateForm.fState.$error.pattern" class="alert alert-warning">State name must contain letters only</span>
+										<span ng-show="farmerUpdateForm.fState.$error.required && farmerUpdateForm.fState.$dirty" class="alert alert-danger"><strong>State name </strong>is required</span>
+    								</span>		
+								</div> -->	
+								
+				<div class="col-xs-3 col-mn">
+								
+    					<select name="fState" ng-model="farmer.fState" required     background-color: #669900;    color: #fff;>
+      						<option value="">Select State</option>
+      						<option value="AL">AL</option>
+      						<option value="AK">AK</option>
+      						<option value="AZ">AZ</option>
+      						<option value="AR">AR</option>
+      						<option value="CA">CA</option>
+      						<option value="CO">CO</option>
+      						<option value="CT">CT</option>
+      						<option value="DE">DE</option>
+      						<option value="FL">FL</option>
+      						<option value="GA">GA</option>
+      						<option value="HI">HI</option>
+      						<option value="ID">ID</option>
+      						<option value="IL">IL</option>
+      						<option value="IN">IN</option>
+      						<option value="IA">IA</option>
+      						<option value="KS">KS</option>
+      						<option value="KY">KY</option>
+      						<option value="LA">LA</option>
+      						<option value="ME">ME</option>
+      						<option value="MD">MD</option>
+      						<option value="MA">MA</option>
+      						<option value="MI">MI</option>
+      						<option value="MN">MN</option>
+      						<option value="MS">MS</option>
+      						<option value="MO">MO</option>
+      						<option value="MT">MT</option>
+      						<option value="NE">NE</option>
+      						<option value="NV">NV</option>
+      						<option value="NH">NH</option>
+      						<option value="NJ">NJ</option>
+      						<option value="NM">NM</option>
+      						<option value="NY">NY</option>
+      						<option value="NC">NC</option>
+      						<option value="ND">ND</option>
+      						<option value="OH">OH</option>
+      						<option value="OK">OK</option>
+      						<option value="OR">OR</option>
+      						<option value="PA">PA</option>
+      						<option value="RI">RI</option>
+      						<option value="SC">SC</option>
+      						<option value="SD">SD</option>
+      						<option value="TN">TN</option>
+      						<option value="TX">TX</option>
+      						<option value="UT">UT</option>
+      						<option value="VT">VT</option>
+      						<option value="">VA</option>
+      						<option value="WA">WA</option>
+      						<option value="WV">WV</option>
+      						<option value="WI">WI</option>
+      						<option value="WY">WY</option>
+      						<option value="DC">DC</option>
+    					</select>
+    	
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span ng-show="farmerUpdateForm.fState.$error.required && farmerUpdateForm.fState.$dirty" class="alert alert-danger">State name is required</span>
+    								</span>		
+								</div>	
+								
+								
+								
+								
+								<div class="col-xs-3 col-mn">
+									<input class="form-control form-inp" type="text"
+										 name="fZip" ng-model="farmer.fZip" autocomplete="on"
+										  autofocus aria-required="true" placeholder="Zip Code *" 
+										  ng-minlength=5 ng-maxlength=5 maxlength=5 ng-pattern="/^\d+$/" required>
+									<span>
+										<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										<span ng-show="farmerUpdateForm.fZip.$error.pattern || farmerUpdateForm.fZip.$error.maxlength || farmerUpdateForm.fZip.$error.minlength" class="alert alert-warning">Zip code must be 4-6 digit long and should contain numbers only</span>
+										<span ng-show="farmerUpdateForm.fZip.$error.required && farmerUpdateForm.fZip.$dirty" class="alert alert-danger"><strong>Zip code</strong> is required</span>
+    								</span>	
+								</div>	
+								
+								<div>
+									
+									<video ng-show="false" id='videoPlayer' width="320" height="240" controls>
+       									<source id='mp4Source' src="http://127.0.0.1:3000/uploads/videos/n2.mp4" type="video/mp4" />
+   									 </video>  
+								
+								</div>
+								
+								<div>
+								<span style="color:red">{{serverError}}</span>
+								</div>
+								
+								<div class="doit">
+									<input class="btn btn-success but1 col-mn1" type="submit"
+										id="submit_button" value="Update Details" ng-click="farmerUpdateDetails()" ng-disabled="farmerUpdateForm.$invalid">
+								</div>
+								<div class="doit">
+									<button class="btn btn-success but1 col-mn1" id="submit_button" value="Change Password" ng-click="passwordShow()">Change Password</button>
+								</div>
+<div class="doit">
+									<input type="submit" class="btn btn-success but1 col-mn1 red-btn"
+										id="submit_button" value="Delete Account" ng-click="farmerDeleteAccount()" >
+								</div>								
+                                </div>
+                                
+								</form>
+								
+			</div>
+			
+			<div ng-show="fPasswordUpdate_Show">
+				<form id="" name="farmerPasswordForm" class="form-horizontal">
+
+                      <div class="heading form-left">
+                         <h3><strong>Update Password</strong> </h3>
+                      </div>
+						<div class="form-group form-left">	
+						<div class="col-xs-3 col-mn2">
+							<input class="form-control form-inp" type="password" id="fOldPassword" name="fOldPassword"
+								ng-model="password.fOldPassword" autocomplete="on" autofocus
+								aria-required="true" placeholder="Old Password *" maxlength=30
+								ng-pattern="/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*([-+_!@#$%^&*.,?])).{5,7}/"
+								required> <span> <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+								<span
+								ng-show="farmerPasswordForm.fOldPassword.$error.pattern" class="alert alert-warning"><strong>Password</strong>
+									must contain a Number, Capital Letter, Small Letter and Special
+									Character</span> <span
+								ng-show="farmerPasswordForm.fOldPassword.$error.required && farmerPasswordForm.fOldPassword.$dirty" class="alert alert-danger"><strong>Password</strong>
+									is required</span>
+							</span>
+						</div>
+						<div class="col-xs-3 col-mn2">
+							<input class="form-control form-inp" type="password" id="fNewPassword" name="fNewPassword"
+								ng-model="password.fNewPassword" autocomplete="on" autofocus
+								aria-required="true" placeholder="New Password *" maxlength=30
+								ng-pattern="/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*([-+_!@#$%^&*.,?])).{5,7}/"
+								required> <span> <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+								<span
+								ng-show="farmerPasswordForm.fNewPassword.$error.pattern" class="alert alert-warning"><strong>Password</strong>
+									must contain a Number, Capital Letter, Small Letter and Special
+									Character</span> <span
+								ng-show="farmerPasswordForm.fNewPassword.$error.required && farmerPasswordForm.fNewPassword.$dirty" class="alert alert-danger"><strong>Password</strong>
+									is required</span>
+							</span>
+						</div>
+
+						<div>
+							<span style="color: red">{{serverPasswordError}}</span>
+						</div>
+
+						<div class="doit">
+							<input class="btn btn-success but1 col-mn1" type="submit" id="submit_button" value="Update Password"
+								ng-click="passwordUpdate()"
+								ng-disabled="farmerPasswordForm.$invalid">
+						</div>
+                        </div>
+					</form>
+			</div>
+			
+			<div ng-show="fAddProduct_Show">
+              <div class="heading form-left">
+                 <h3><strong>Add New Product</strong> </h3>
+                </div>
+				<form id="" name="productForm" enctype='multipart/form-data' class="form-horizontal">
+               			<div class="form-group form-left">	
+							<div class="col-xs-3 col-mn">
+									<input class="form-control form-inp" type="text" id="pName1"
+									name="pName1" ng-model="product.pName1" autocomplete="on"
+									autofocus aria-required="true" placeholder="Product Name *" 
+									maxlength=20 ng-pattern="/^[A-Za-z0-9 ]*$/" required>
+									<span> <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										<span ng-show="productForm.pName1.$error.pattern" class="alert alert-warning">Product name must contain letters only</span>
+    									<span ng-show="productForm.pName1.$error.required && productForm.pName1.$dirty" class="alert alert-danger"><strong>Product name</strong> is required</span>
+    								</span>
+								</div>	
+								
+								<div class="col-xs-3 col-mn">
+									<input class="form-control form-inp" type="text"
+										name="pPrice1" ng-model="product.pPrice1" autocomplete="on"
+										  autofocus aria-required="true" placeholder="Product Price *" 
+										  maxlength=20 ng-pattern="/^[0-9.]*$/" required>
+									<span> <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										<span ng-show="productForm.pPrice1.$error.pattern" class="alert alert-warning">Product price must be mathematical number</span>
+										<span ng-show="productForm.pPrice1.$error.required && productForm.pPrice1.$dirty" class="alert alert-danger"><strong>Product price</strong> is required</span>
+    								</span>		
+								</div>		
+								
+								<div class="col-xs-3 col-mn" style="padding-bottom: 10px;">
+									<input class="form-control form-inp" type="text"
+										name="pDesc1" ng-model="product.pDesc1" autocomplete="on"
+										  autofocus aria-required="true" placeholder="Product Description *" 
+										  maxlength=100 ng-pattern="/[A-Za-z0-9. ]/" required>
+									<span> <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										<span ng-show="productForm.pDesc1.$error.pattern" class="alert alert-warning">Product description don't allowed to have special characters</span>
+										<span ng-show="productForm.pDesc1.$error.required && productForm.pDesc1.$dirty" class="alert alert-danger"><strong>Product description</strong> is required</span>
+    								</span>		
+								</div>	
+								
+								
+								<div style="width: 60%; padding-left: 10px; padding-top: 10px;">
+								
+								<div>
+									<h2 style="font-size: 15px;"> Weekend Discount availability</h2>
+								</div>								
+								<table style="padding-top:10px; margin-left:15px;" width="80%" border="0" cellspacing="0" cellpadding="0">
+                                <tbody>
+									<tr>
+										  <td><input type="radio" ng-model="discountSelected" value="10"></td>
+										  <td class="maindelivery" style="width:8px;">&nbsp;</td>
+										  <td>
+										  5-10%
+										  </td>
+									</tr>
+									<tr>
+										  <td class="maindelivery"><input type="radio" ng-model="discountSelected" value="15"></td>
+										  <td style="width:8px;">&nbsp;</td>
+										  <td>
+										  10-15%
+										  </td>
+									</tr>
+									<tr>
+										  <td class="maindelivery"><input type="radio" ng-model="discountSelected" value="20"></td>
+										  <td style="width:8px;">&nbsp;</td>
+										  <td>
+										  15-20%
+										  </td>
+									</tr>
+                                </tbody>
+                                </table>	
+								</div>
+								<div class="col-xs-3 col-mn">
+					
+									 <input type="file" ngf-select ng-model="file" name="imageFile" ngf-pattern="'image/*'" accept="image/*" ngf-max-size="20MB" required/>
+					
+								</div>		
+								
+								<div class="doit">
+									<input class="btn btn-success but1 col-mn1" type="submit" id="submit_button" value="Add Product"
+									ng-click="addProduct()"
+									ng-disabled="productForm.$invalid">
+								</div>
+			</div>
+
+				</form>
+				
+				
+			</div>
+			
+<!-- 			<div id="fUpdateProduct" ng-show="fUpdateProduct_Show">
+              <div class="heading form-left">
+                 <h3><strong>Update Product Details</strong> </h3>
+                </div>
+
+				<form id="" name="productUpdateForm">
+							<div class="form-group form-left">	
+							<div class="col-xs-3 col-mn">
+									<input type="text" id="pName2"
+									name="pName2" ng-model="product.pName2" autocomplete="on"
+									autofocus aria-required="true" placeholder="Product Name *" 
+									maxlength=20 ng-pattern="/^[A-Za-z0-9 ]*$/" required  class="form-control form-inp">
+									<span>
+										<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										<span ng-show="productUpdateForm.pName2.$error.pattern" class="alert alert-warning">Product name must contain letters only</span>
+    									<span ng-show="productUpdateForm.pName2.$error.required && productUpdateForm.pName2.$dirty"class="alert alert-danger"><strong>Product name</strong> is required</span>
+    								</span>
+								</div>	
+								
+								<div class="col-xs-3 col-mn">
+									<input type="text"
+										name="pPrice2" ng-model="product.pPrice2" autocomplete="on"
+										  autofocus aria-required="true" placeholder="Product Price *" 
+										  maxlength=20 ng-pattern="/^\d+$/" required class="form-control form-inp">
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span style="color:red" ng-show="productUpdateForm.pPrice2.$error.pattern" class="alert alert-warning">Product price must be mathematical number</span>
+										<span ng-show="productUpdateForm.pPrice2.$error.required && productUpdateForm.pPrice2.$dirty"class="alert alert-danger"><strong>Product price</strong> is required</span>
+    								</span>		
+								</div>		
+								
+								<div class="col-xs-3 col-mn">
+									<input type="text"
+										name="pDesc2" ng-model="product.pDesc2" autocomplete="on"
+										  autofocus aria-required="true" placeholder="Product Description *" 
+										  maxlength=100 ng-pattern="/[A-Za-z0-9. ]/" required class="form-control form-inp">
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span ng-show="productUpdateForm.pDesc2.$error.pattern" class="alert alert-warning">Product description don't allowed to have special characters</span>
+										<span ng-show="productUpdateForm.pDesc2.$error.required && productUpdateForm.pDesc2.$dirty"class="alert alert-danger"><strong>Product description</strong> is required</span>
+    								</span>		
+								</div>		
+								<input type="text" ng-show=false ng-model="product.pID2">
+								<div class="col-xs-3 col-mn">
+					
+									 <input class="form-control form-inp" type="file" ngf-select ng-model="file" name="imageFile" ngf-pattern="'image/*'" accept="image/*" ngf-max-size="20MB" />
+					
+								</div>		
+								
+								
+								
+								<div class="doit">
+									<input class="btn btn-success but1 col-mn1" type="submit" id="submit_button" value="Update Product Details"
+									ng-click="updateProduct()"
+									ng-disabled="productUpdateForm.$invalid">
+								</div>
+							</div>
+				</form>
+			
+			</div> -->
+			
+			
+			
+			
+			
+			<div id="fUpdateProduct" ng-show="fUpdateProduct_Show">
+			
+				<form id="" name="productUpdateForm">
+							<div class="form-group form-left">	
+							<div class="col-xs-3 col-mn">
+									<input type="text" id="pName2"
+									name="pName2" ng-model="product.pName2" autocomplete="on"
+									autofocus aria-required="true" placeholder="Product Name *" 
+									maxlength=20 ng-pattern="/^[A-Za-z0-9 ]*$/" required  class="form-control form-inp">
+									<span>
+										<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										<span ng-show="productUpdateForm.pName2.$error.pattern" class="alert alert-warning">Product name must contain letters only</span>
+    									<span ng-show="productUpdateForm.pName2.$error.required && productUpdateForm.pName2.$dirty" class="alert alert-danger">Product name is required</span>
+    								</span>
+								</div>	
+								
+								<div class="col-xs-3 col-mn">
+									<input type="text"
+										name="pPrice2" ng-model="product.pPrice2" autocomplete="on"
+										  autofocus aria-required="true" placeholder="Product Price *" 
+										  maxlength=20 ng-pattern="/[0-9.]/" required class="form-control form-inp">
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span style="color:red" ng-show="productUpdateForm.pPrice2.$error.pattern" class="alert alert-warning">Product price must be mathematical number</span>
+										<span style="color:red" ng-show="productUpdateForm.pPrice2.$error.required && productUpdateForm.pPrice2.$dirty" class="alert alert-danger">Product price is required</span>
+    								</span>		
+								</div>		
+								
+								<div class="col-xs-3 col-mn">
+									<input type="text"
+										name="pDesc2" ng-model="product.pDesc2" autocomplete="on"
+										  autofocus aria-required="true" placeholder="Product Description *" 
+										  maxlength=30 ng-pattern="/[A-Za-z0-9. ]/" required class="form-control form-inp">
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span ng-show="productUpdateForm.pDesc2.$error.pattern">Product description don't allowed to have special characters</span>
+										<span ng-show="productUpdateForm.pDesc2.$error.required && productUpdateForm.pDesc2.$dirty">Product description is required</span>
+    								</span>		
+								</div>		
+								<input type="text" ng-show=false ng-model="product.pID2">
+								<div class="col-xs-3 col-mn">
+					
+									 <input type="file" ngf-select ng-model="file" name="imageFile" ngf-pattern="'image/*'" accept="image/*" ngf-max-size="20MB" required/>
+					
+								</div>	
+								
+								<div class="doit">
+									<input class="btn btn-success but1 col-mn1" type="submit" id="submit_button" value="Update Product Details"
+									ng-click="updateProduct()"
+									ng-disabled="productUpdateForm.$invalid">
+								</div>
+							</div>
+				</form>
+			
+			</div>
+			
+			<div ng-show="file_Show">
+
+					<div class="main">
+						<div class="content">
+							<div class="content_top">
+								<div class="heading">
+									<h3>Product Details</h3>
+								</div>
+
+								<div class="clear"></div>
+							</div>
+							<div class="section group">
+								<div class="cont-desc span_1_of_2">
+									<div class="product-details">
+										<div class="grid images_3_of_2">
+											<div id="container">
+												<div id="products_example">
+													<div id="products">
+														<div class="slides_container"
+															style="overflow: hidden; position: relative; display: block; width: 320px; height: 276px;">
+															<img src="/uploads/images/{{product.pImage3}}"
+																style="max-height: 275px; min-height: 320px; max-width: 320px; min-width: 320px;" />
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="desc span_3_of_2">
+												<p>
+													<span style="    color: #679900;    font-size: 28px;    font-weight: bold;    text-transform: uppercase;">{{product.pName3}}</span><br /><br />
+												</p>
+												
+												<p>
+													Price: <span class="hname">${{product.pPrice3}}</span>
+												</p>
+												<div style="height: 13px;">&nbsp;</div>
+												<div class="review">
+												<h3><span style="color:#969696; font-size:13px;">Product Description:</span>&nbsp;<br/></h3>
+												<span>{{product.pDesc3}}</span></h3>	
+												<div class="product_desc"></div>
+												
+											</div>
+											<div class="share-desc" align="left">
+												<div class="clear"></div>
+											</div>
+										</div>
+										<div class="clear"></div>
+									</div>
+                                    <div>
+	                                Average Ratings:<p>{{product.pAvgRatings}}</p>
+													<div ng-repeat = "review in product.pReviewRatings3">
+														<hr>
+														<p style="color:gray; text-transform: uppercase;"> -by {{review.cName}}</p>
+															<p><h4>Ratings:<span style="color:black;"> {{review.rating}}</span></h4></p>
+															<p style="margin-bottom: 20px;"><h3>Reviews:<br/> <span style="color:black;">{{review.review}}</span></h3></p>
+													</div>                                 </div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+			
+    </div>
+    	</div>
+ 	</div>
+	</div>
+	<div style="padding-top:60px;">
+	    <div class="footer" style="background-image:url(images/strip.png);">
+	        <div class="copy_right">
+					<p style="margin-top: 0.5%;margin-bottom: 0.5%;">All items sold by and ship from AmazonFresh unless otherwise specified </p>
+			</div>
+	    </div>
+	</div>
+</body>
+</html>
+

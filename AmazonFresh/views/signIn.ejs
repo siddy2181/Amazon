@@ -1,0 +1,195 @@
+     <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">
+<html>
+  <head>
+	<title>
+    	Amazon.com Sign In 
+	</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    
+    <!-- Latest compiled JavaScript -->
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link rel="shortcut icon"
+	href="https://images-na.ssl-images-amazon.com/images/G/01/omaha/images/ui/favicon.ico"
+	type="image/vnd.microsoft.icon" />
+
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	
+<link  type="text/css" href="https://images-na.ssl-images-amazon.com/images/G/01/x-locale/common/errors-alerts/error-styles-ssl._CB219086192_.css" rel="stylesheet" />
+<link  type="text/css" href="https://images-na.ssl-images-amazon.com/images/G/01/authportal/common/css/ap_global._CB318885489_.css" rel="stylesheet" />
+<link  type="text/css" href="https://images-na.ssl-images-amazon.com/images/G/01/omaha/css/authPortalPages._CB327897174_.css" rel="stylesheet" />
+
+
+<script>
+	
+	var app = angular.module("amazonFresh_signIn_app", []); 
+	app.controller("amazonFresh_signIn_controller", function($scope,$http,$window) {
+		
+		$http({
+			method:'get',
+			url:'/session'
+		}).then(function(res){
+			if(res.data.status == "200"){
+				
+				//alert("Nitesh");
+				if(res.data.signInAs == "admin"){
+					$window.location.href = '/adminHome';
+				}
+				else if(res.data.signInAs == "customer"){
+					$window.location.href = '/customerHome';
+				}
+				else if(res.data.signInAs == "farmer"){
+					$window.location.href = '/farmerHome';
+				}
+				 
+			}else{
+			}
+		});
+		
+		$scope.signUp = function(){
+			$window.location.href = '/signUp';
+		}
+		
+		$scope.index = function(){
+			$window.location.href = '/index';
+		}
+		
+		$scope.SignIn = function(){
+			
+			var url = "/userSignIn";
+			
+			if($scope.signIn.type == "admin"){
+				url+="Admin";
+			}else if($scope.signIn.type == "farmer"){
+				url+="farmer";
+			}else if($scope.signIn.type == "customer"){
+				url+="Customer";
+			}
+			
+			//alert($scope.signIn.type+" 	"+$scope.signIn.email+" 	"+$scope.signIn.password)
+			
+			$http({
+				method:'post',
+				url: url,
+				data:{ username: $scope.signIn.email , password: $scope.signIn.password },
+				dataType: 'html'
+			}).then(function(res){
+				if(res.data.status == "200"){
+					
+					if(res.data.signInAs == "customer"){
+						$window.location.href = '/customerHome';
+					}else if(res.data.signInAs == "admin"){
+						$window.location.href = '/adminHome';
+					}else if(res.data.signInAs == "farmer"){
+						$window.location.href = '/farmerHome';
+					}
+						
+				}else{
+					
+					$scope.serverError = res.data.msg;
+					
+				}
+			});
+		}
+		
+	
+	});
+
+</script>
+
+</head>
+
+<body ng-app="amazonFresh_signIn_app" ng-controller="amazonFresh_signIn_controller" >
+
+	<div id="topSlots">
+  		<div id="top-0"></div>
+  		<div id="top-1">
+		<div id="ap_header" class="ap_header">
+     		<img src="https://images-na.ssl-images-amazon.com/images/G/01/omaha/images/ui/af-logo-white-trans3._CB377124652_.png" alt="Amazon.com Logo" ng-click="index()"/>		
+		</div>
+		</div>
+	</div>
+
+	<div id="centerSlots">
+  		<div id="signin-slot" style="height:200px;">
+        <div align="center"><div style=" position: absolute;
+    margin: -100px 0 0 -200px;
+    top: 20%;
+    left: 50%;">
+       	  <img src="/images/logo-amazonFresh-400.gif" width="400" height="144" alt=""/> </div></div>
+		  <form name="signInForm" style="top: 59%;    position: absolute; left: 42%;" class="form-horizontal">
+				<div id="ap_signin1a_pagelet" class="ap_table ap_pagelet">
+
+					
+    
+    				<div id="ap_signin1a_password_row" class="ap_row">
+						<select name="" id="" ng-model="signIn.type" class="form-control" style="background-color:#669900; color: #fff;;" ng-change="" required>
+      						<option value="">Please select</option>
+      						<option value="customer">Sign In as Customer</option>
+      						<option value="farmer">Sign In as Farmer</option>
+      						<option value="admin">Sign In as Admin</option>
+    					</select>
+    				</div>	
+    
+    				<div id="ap_signin1a_password_row" class="ap_row" >
+        				<input style="height:37px;" class="form-control form-inp" type="text" id="email"
+						name="email" ng-model="signIn.email" autocomplete="on"
+						autofocus aria-required="true" placeholder="Email *" 
+						maxlength=30 ng-pattern="/[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}/" required autocomplete="off">
+						<span>
+							<span style="color:#e51837;" ng-show="signInForm.email.$error.pattern">Please enter valid email</span>
+    						<span style="color:#e51837;" ng-show="signInForm.email.$error.required && signInForm.email.$dirty">Email is required</span>
+    					</span>	   
+      				</div>
+    				
+    				<div id="ap_signin1a_password_row" class="ap_row" >
+            			<input style="height:37px;" class="form-control form-inp" type="password" id="password"
+						 name="password" ng-model="signIn.password" autocomplete="on"
+						 autofocus aria-required="true" placeholder="Password *" 
+						 maxlength=30 ng-pattern="/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*([-+_!@#$%^&*.,?])).{5,7}/" required autocomplete="off">
+						<span>
+							<span style="color:#e51837;" ng-show="signInForm.password.$error.pattern">Password must contain a Number, Capital Letter, Small Letter and Special Character</span>
+    						<span style="color:#e51837;" ng-show="signInForm.password.$error.required && signInForm.password.$dirty">Password is required</span>
+    					</span>	
+        			</div>
+        
+        			<div>
+						<span style="color:red">{{serverError}}</span>
+					</div>
+        
+    				<div id="ap_signin1a_signin_button_row" class="ap_row">
+      					<span class="in-amzn-btn btn-prim-med-ra" id="signInSubmit" unselectable="on">
+            	      		<span>
+            	      			<input type="submit" id="submit_button" value="Sign In" ng-click="SignIn()" ng-disabled="signInForm.$invalid">
+							</span>
+                		</span>
+   					</div>
+    
+    
+      				<div id="ap_signin1a_notification_row" class="ap_row">
+      
+      					<span id="sign_in_notification_row" >
+      						New Amazon.com customer? <a href='' ng-click="signUp()" ng-model="signUp">Create a new Amazon account</a>
+      					</span>
+      				</div>
+
+    				<div id="ap_signin1a_forgot_password_row" class="ap_row">
+      					<span class="ap_col1">&nbsp;</span>
+      					<span class="ap_col2">
+        					<a>Forgot your password?</a>
+      					</span>
+    				</div>
+  				</div>
+			</form>
+	
+		</div>
+	</div> 
+
+</body>
+</html>

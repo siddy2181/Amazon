@@ -1,0 +1,765 @@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<meta name="verify-v1"
+	content="lutKQKzTRD4Thc7dLxJZfCfpu/8crumpkdr/y2u32Kk=" />
+<meta name="description"
+	content="Next-day and early morning delivery of fresh grocery, everyday essentials, neighborhood products, and Amazon.com items." />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="google-site-verification"
+	content="9vpzZueNucS8hPqoGpZ5r10Nr2_sLMRG3AnDtNlucc4" />
+
+<title>Create an Account | AmazonFresh</title>
+
+<link rel="stylesheet" type="text/css"
+	href="https://images-na.ssl-images-amazon.com/images/G/01/omaha/css/jqueryAutocomplete-1.2._V260835473_.css" />
+
+<link
+	href="https://images-na.ssl-images-amazon.com/images/G/01/omaha/css/default._V1455922598_.css"
+	type="text/css" rel="stylesheet" />
+
+
+<link
+	href="https://images-na.ssl-images-amazon.com/images/G/01/omaha/css/myAccount._V1388696013_.css"
+	type="text/css" rel="stylesheet" />
+
+
+<link
+	href="https://images-na.ssl-images-amazon.com/images/G/01/omaha/css/welcome._V1442871299_.css"
+	type="text/css" rel="stylesheet" />
+
+<script type="text/javascript"
+	src="https://images-na.ssl-images-amazon.com/images/G/01/javascripts/lib/jquery/jquery-1.3.2.min._V244049497_.js"></script>
+<script type="text/javascript"
+	src="https://images-na.ssl-images-amazon.com/images/G/01/javascripts/lib/jquery/jquery-ui-1.8.11.full.min.js"></script>
+
+
+<script type="text/javascript"
+	src="https://images-na.ssl-images-amazon.com/images/G/01/omaha/javascript/jqueryAutocomplete-1-1-custom._V400505187_.js"></script>
+
+<link
+	href="https://images-na.ssl-images-amazon.com/images/G/01/omaha/css/shoveler._V1397624657_.css"
+	type="text/css" rel="stylesheet" />
+
+
+<script type="text/javascript"
+	src="https://images-na.ssl-images-amazon.com/images/G/01/omaha/js/searchResultsWidget._V1410555730_.js"></script>
+
+
+<script type="text/javascript"
+	src="https://images-na.ssl-images-amazon.com/images/G/01/omaha/js/advertWidget._V1426107391_.js"></script>
+
+
+<script type="text/javascript"
+	src="https://images-na.ssl-images-amazon.com/images/G/01/omaha/js/welcome._V1441330792_.js"></script>
+
+
+<link
+	href="https://images-na.ssl-images-amazon.com/images/G/01/omaha/css/refresh._V1432677347_.css"
+	type="text/css" rel="stylesheet" />
+
+<script type="text/javascript"
+	src="https://images-na.ssl-images-amazon.com/images/G/01/omaha/js/lightbox._V1396384790_.js"></script>
+
+
+<script type="text/javascript"
+	src="https://images-na.ssl-images-amazon.com/images/G/01/omaha/js/refreshToolbar._V1376527512_.js"></script>
+
+
+<link rel="stylesheet" type="text/css"
+	href="/css/MyFontsWebfontsKit.css" />
+
+<link rel="shortcut icon"
+	href="https://images-na.ssl-images-amazon.com/images/G/01/omaha/images/ui/favicon.ico"
+	type="image/vnd.microsoft.icon" />
+<link rel="icon"
+	href="https://images-na.ssl-images-amazon.com/images/G/01/omaha/images/ui/favicon.ico"
+	type="image/vnd.microsoft.icon" />
+
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/ng-file-upload-shim.js"></script> <!-- for no html5 browsers support -->
+	<script type="text/javascript" src="/js/ng-file-upload.js"></script>
+	<script type="text/javascript" src="/js/ng-file-upload-all.js"></script>
+	<script type="text/javascript" src="/js/FileAPI.js"></script>
+
+<style>
+.credit_card
+{
+    padding-bottom: 10px;
+    padding-top: 14px;
+    font-size: 18px !important;
+}
+.pad_upc
+{
+	height: 40px !important;
+}
+</style>
+<script>
+	
+	var app = angular.module("amazonFresh_signUp_app", ['ngFileUpload']); 
+	app.controller("amazonFresh_signUp_controller",['Upload','$http','$scope','$window',function(Upload,$http,$scope,$window){
+		$scope.farmerSignUpForm_Show = false;
+		
+		$http({
+			method:'get',
+			url:'/session'
+		}).then(function(res){
+			if(res.data.status == "200"){
+				
+				if(res.data.signInAs == "admin"){
+					$window.location.href = '/adminHome';
+				}
+				else if(res.data.signInAs == "customer"){
+					$window.location.href = '/customerHome';
+				}
+				else if(res.data.signInAs == "farmer"){
+					$window.location.href = '/farmerHome';
+				}
+				 
+			}else{
+			}
+		});
+		
+		$scope.signIn = function(){
+			$window.location.href = '/signIn';
+		}
+		
+
+		$scope.index = function(){
+			$window.location.href = '/index';
+		}
+		
+		$scope.typeChange = function(){
+			
+			if($scope.type == "farmer"){
+				$scope.farmerSignUpForm_Show = true;
+				$scope.customerSignUpForm_Show = false;
+			}else if($scope.type == "customer"){
+				$scope.farmerSignUpForm_Show = false;
+				$scope.customerSignUpForm_Show = true;
+			}else{
+				$scope.farmerSignUpForm_Show = false;
+				$scope.customerSignUpForm_Show = false;
+			}
+			
+		}
+		
+		
+		$scope.farmerSignUp = function(){
+			//alert($scope.farmer.fSSN + "	"+$scope.farmer.fEmail+"	"+$scope.farmer.fPassword+"	"+$scope.farmer.fFirstName+"	"+$scope.farmer.fLastName+"	"+$scope.farmer.fPhoneNumber+"	"+$scope.farmer.fAddress+"	"+$scope.farmer.fState+"	"+$scope.farmer.fCity+"	"+$scope.farmer.fZip);
+			alert("inside signup");
+			console.log("inside addProduct: "+$scope.farmerSignUpForm.videoFile.$valid && $scope.file);
+			if ($scope.farmerSignUpForm.videoFile.$valid && $scope.file) { //check if from is valid
+				console.log("inside farmer signup file: "+$scope.file);
+				var serverData = {"farmerDetails":$scope.farmer,"file":$scope.file};
+				Upload.upload({
+					method:'post',
+					url:'/farmerSignUp',
+					data:serverData
+				}).then(function(res){
+					if(res.data.status == "200"){
+						//$window.alert('Success ' + res.config.data.file.name + 'uploaded. Response: ');
+						alert("SignUp Successful, Please wait for system admin to authorise you.")
+						$window.location.href = '/';
+						
+					}else{
+						 //$window.alert("error is: "+res.data.error_desc);
+						$scope.serverError = res.data.msg;
+						alert(res.data.msg);
+					}
+				});
+			}
+			else{
+				var serverData = {"farmerDetails":$scope.farmer,"file":" "};
+			 	$http({
+					method:'post',
+					url:'/farmerSignUp',
+					data:serverData
+				}).then(function(res){
+					if(res.data.status == "200"){
+						alert("SignUp Successful, Please wait for system admin to authorise you.")
+						$window.location.href = '/';
+					}else{
+						$scope.serverError = res.data.msg;
+					}
+				}); 
+			}
+		
+		}
+		
+		/* $scope.farmerSignUp = function(){
+			alert($scope.farmer.fSSN + "	"+$scope.farmer.fEmail+"	"+$scope.farmer.fPassword+"	"+$scope.farmer.fFirstName+"	"+$scope.farmer.fLastName+"	"+$scope.farmer.fPhoneNumber+"	"+$scope.farmer.fAddress+"	"+$scope.farmer.fState+"	"+$scope.farmer.fCity+"	"+$scope.farmer.fZip);
+			var serverData = {"farmerDetails":$scope.farmer}
+			$http({
+				method:'post',
+				url:'/farmerSignUp',
+				data:serverData
+			}).then(function(res){
+				if(res.data.status == "200"){
+					$window.location.href = '/index';
+				}else{
+					$scope.serverError = res.data.msg;
+				}
+			});
+	
+		
+		} */
+		
+		$scope.customerSignUp = function(){
+			//alert($scope.customer.cSSN + "	"+$scope.customer.cEmail+"	"+$scope.customer.cPassword+"	"+$scope.customer.cFirstName+"	"+$scope.customer.cLastName+"	"+$scope.customer.cPhoneNumber+"	"+$scope.customer.cAddress+"	"+$scope.customer.cState+"	"+$scope.customer.cCity+"	"+$scope.customer.cZip+" "+$scope.customer.cCreditCardNumber+" "+$scope.customer.cCreditCardSC+" "+$scope.customer.cCreditCardSC+" "+$scope.customer.cCreditCardMonth+" "+$scope.customer.cCreditCardYear);
+			var serverData = {"customerDetails":$scope.customer}
+			$http({
+				method:'post',
+				url:'/customerSignUp',
+				data:serverData
+			}).then(function(res){
+				if(res.data.status == "200"){
+					alert("SignUp Successful, Please wait for system admin to authorise you.")
+					$window.location.href = '/';
+				}else{
+					$scope.serverError = res.data.msg;
+					alert(res.data.msg);
+				}
+			});
+		}
+		
+	
+	}]);
+
+	
+
+</script>
+
+
+</head>
+
+
+<body id="welcome" ng-app="amazonFresh_signUp_app" ng-controller="amazonFresh_signUp_controller">
+	<div id="alphaLayer">
+		<div>
+			<!-- BEGIN header -->
+			<div id="headerNav" class="refresh">
+				<div class="innerpadding">
+
+					<a href="https://fresh.amazon.com/help?ref_=nav_help"><div id="help_top">
+							<div id="help_top_img"></div>
+					</div></a>
+					
+					<ul class="sidelist">
+            <li id="freshLogo">
+                <a ng-click="index()"><img src="https://images-na.ssl-images-amazon.com/images/G/01/omaha/images/ui/af-logo-white-trans3.png" alt="AmazonFresh Home" />
+                    <span></span></a>
+            </li>
+
+						<li class="first"><span class="greeting" id="greeting">
+								Already an AmazonFresh customer? <a href='' ng-click="signIn()" ng-model="signIn">Sign in</a>
+
+
+						</span></li>
+
+
+					</ul>
+				</div>
+			</div>
+
+
+
+			<div id="unreadUrgentMessages"></div>
+
+
+
+			<!-- END header -->
+
+			<div id=pageWrapper>
+				<div id="pageContent">
+					<div id="registration" class="contentArea" style="background-image:none; box-shadow: none; -webkit-box-shadow: none; padding-top: 0px;">					
+			       	  <img src="/images/signup_logo.jpg" width="150" height="150" alt=""/> 
+						<h1>Create New Account</h1>
+						
+					<div>
+						<select name="" id="" ng-model="type" ng-change="typeChange()" style="    background-color: #669900;    color: #fff;">
+      						<option value="">Please select</option>
+      						<option value="customer">Sign Up as Customer</option>
+      						<option value="farmer">Sign Up as Farmer</option>
+    					</select><br>
+					</div>
+					
+					<h1></h1>
+					
+					<div ng-show="farmerSignUpForm_Show">
+						<form id="" name="farmerSignUpForm">
+							
+								<div>
+									<input type="text" class="pad_upc" id="fSSN"
+									name="fSSN" ng-model="farmer.fSSN" autocomplete="on"
+									autofocus placeholder="Farmer SSN 123-45-5678 *" 
+									ng-maxlength=11 ng-minlength=11 maxlength=11 ng-pattern="/^[0-9]{3}\-[0-9]{2}\-[0-9]{4}$/" required>
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span ng-show="farmerSignUpForm.fSSN.$error.pattern || farmerSignUpForm.fSSN.$error.maxlength || farmerSignUpForm.fSSN.$error.minlength" class="alert alert-warning">SSN must be 9 digit long and contain numbers only</span>
+										<span ng-show="farmerSignUpForm.fSSN.$error.required && farmerSignUpForm.fSSN.$dirty" class="alert alert-danger">SSN is required</span>
+    								</span>	
+								</div>
+								
+								<div>
+									<input type="text" class="pad_upc" id="fEmail"
+										 name="fEmail" ng-model="farmer.fEmail" autocomplete="on"
+										  autofocus aria-required="true" placeholder="Email *" 
+										  maxlength=30 ng-pattern="/[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}/" required>
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span ng-show="farmerSignUpForm.fEmail.$error.pattern" class="alert alert-warning">Please enter valid email</span>
+    									<span ng-show="farmerSignUpForm.fEmail.$error.required && farmerSignUpForm.fEmail.$dirty" class="alert alert-danger">Email is required</span>
+    								</span>	
+								</div>
+								
+								<div>
+									<input type="password" class="pad_upc" id="fPassword"
+										 name="fPassword" ng-model="farmer.fPassword" autocomplete="on"
+										  autofocus aria-required="true" placeholder="Password *" 
+										  maxlength=30 ng-pattern="/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*([-+_!@#$%^&*.,?])).{5,7}/" required>
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span ng-show="farmerSignUpForm.fPassword.$error.pattern" class="alert alert-warning">Password must contain a Number, Capital Letter, Small Letter and Special Character</span>
+    									<span ng-show="farmerSignUpForm.fPassword.$error.required && farmerSignUpForm.fPassword.$dirty" class="alert alert-danger">Password is required</span>
+    								</span>	
+								</div>
+								
+								<div>
+									<input type="text" class="pad_upc" id="fFirstName"
+									name="fFirstName" ng-model="farmer.fFirstName" autocomplete="on"
+									autofocus aria-required="true" placeholder="First Name *" 
+									maxlength=20 ng-pattern="/^[A-Za-z ]*$/" required class="pad_upc">
+									
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span ng-show="farmerSignUpForm.fFirstName.$error.pattern" class="alert alert-warning">First name must contain letters only</span>
+    									<span ng-show="farmerSignUpForm.fFirstName.$error.required && farmerSignUpForm.fFirstName.$dirty" class="alert alert-danger">First name is required</span>
+    								</span>	
+								</div>
+									
+								<div>
+									<input type="text" class="pad_upc" id="fLastName"
+									name="fLastName" ng-model="farmer.fLastName" autocomplete="on"
+									autofocus aria-required="true" placeholder="Last Name *" 
+									maxlength=20 ng-pattern="/^[A-Za-z ]*$/" required class="pad_upc">
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span ng-show="farmerSignUpForm.fLastName.$error.pattern" class="alert alert-warning">Last name must contain letters only</span>
+    									<span ng-show="farmerSignUpForm.fLastName.$error.required && farmerSignUpForm.fLastName.$dirty" class="alert alert-danger">Last name is required</span>
+    								</span>	
+								</div>	
+								
+								<div>
+									<input type="text" class="pad_upc"
+										 name="fPhoneNumber" ng-model="farmer.fPhoneNumber" autocomplete="on"
+										  autofocus aria-required="true" placeholder="Phone Number *" 
+										  ng-maxlength=10 ng-minlength=10 maxlength=10 ng-pattern="/[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}/" required class="pad_upc">
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span ng-show="farmerSignUpForm.fPhoneNumber.$error.pattern || farmerSignUpForm.fPhoneNumber.$error.maxlength || farmerSignUpForm.fPhoneNumber.$error.minlength" class="alert alert-warning">Phone number must be 10 digit long and should contain numbers only</span>
+										<span ng-show="farmerSignUpForm.fPhoneNumber.$error.required && farmerSignUpForm.fPhoneNumber.$dirty" class="alert alert-danger">Phone number is required</span>
+    								</span>	
+								</div>		
+								
+								
+								<div>
+									<input type="text" class="pad_upc"
+										 name="fAddress" ng-model="farmer.fAddress" autocomplete="on"
+										  autofocus aria-required="true" placeholder="Address *" 
+										  maxlength=40 ng-pattern="/[A-Za-z0-9. ]/" required class="pad_upc">
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+											<span ng-show="farmerSignUpForm.fAddress.$error.required && farmerSignUpForm.fAddress.$dirty" class="alert alert-danger">Address is required</span>
+    									</span>
+    								</span>		
+								</div>	
+								
+								<div>
+									<input type="text" class="pad_upc"
+										 name="fCity" ng-model="farmer.fCity" autocomplete="on"
+										  autofocus aria-required="true" placeholder="City *" 
+										  maxlength=20 ng-pattern="/^[A-Za-z ]*$/" required class="pad_upc">
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span ng-show="farmerSignUpForm.fCity.$error.pattern" class="alert alert-warning">City name must contain letters only</span>
+										<span ng-show="farmerSignUpForm.fCity.$error.required && farmerSignUpForm.fCity.$dirty" class="alert alert-danger">City name is required</span>
+    								</span>		
+								</div>	
+								
+								
+								
+									
+   				 <div>
+								
+    					<select name="fState" ng-model="farmer.fState" required     background-color: #669900;    color: #fff;>
+      						<option value="">Select State</option>
+      						<option value="AL">AL</option>
+      						<option value="AK">AK</option>
+      						<option value="AZ">AZ</option>
+      						<option value="AR">AR</option>
+      						<option value="CA">CA</option>
+      						<option value="CO">CO</option>
+      						<option value="CT">CT</option>
+      						<option value="DE">DE</option>
+      						<option value="FL">FL</option>
+      						<option value="GA">GA</option>
+      						<option value="HI">HI</option>
+      						<option value="ID">ID</option>
+      						<option value="IL">IL</option>
+      						<option value="IN">IN</option>
+      						<option value="IA">IA</option>
+      						<option value="KS">KS</option>
+      						<option value="KY">KY</option>
+      						<option value="LA">LA</option>
+      						<option value="ME">ME</option>
+      						<option value="MD">MD</option>
+      						<option value="MA">MA</option>
+      						<option value="MI">MI</option>
+      						<option value="MN">MN</option>
+      						<option value="MS">MS</option>
+      						<option value="MO">MO</option>
+      						<option value="MT">MT</option>
+      						<option value="NE">NE</option>
+      						<option value="NV">NV</option>
+      						<option value="NH">NH</option>
+      						<option value="NJ">NJ</option>
+      						<option value="NM">NM</option>
+      						<option value="NY">NY</option>
+      						<option value="NC">NC</option>
+      						<option value="ND">ND</option>
+      						<option value="OH">OH</option>
+      						<option value="OK">OK</option>
+      						<option value="OR">OR</option>
+      						<option value="PA">PA</option>
+      						<option value="RI">RI</option>
+      						<option value="SC">SC</option>
+      						<option value="SD">SD</option>
+      						<option value="TN">TN</option>
+      						<option value="TX">TX</option>
+      						<option value="UT">UT</option>
+      						<option value="VT">VT</option>
+      						<option value="">VA</option>
+      						<option value="WA">WA</option>
+      						<option value="WV">WV</option>
+      						<option value="WI">WI</option>
+      						<option value="WY">WY</option>
+      						<option value="DC">DC</option>
+    					</select>
+    	
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span ng-show="farmerSignUpForm.fState.$error.required && farmerSignUpForm.fState.$dirty" class="alert alert-danger">State name is required</span>
+    								</span>		
+								</div>	
+								
+								<div>
+									<input type="text" class="pad_upc"
+										 name="fZip" ng-model="farmer.fZip" autocomplete="on"
+										  autofocus aria-required="true" placeholder="Zip Code *" 
+										  ng-minlength=5 ng-maxlength=5 maxlength=5 ng-pattern="/^\d+$/" required class="pad_upc">
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span ng-show="farmerSignUpForm.fZip.$error.pattern || farmerSignUpForm.fZip.$error.maxlength || farmerSignUpForm.fZip.$error.minlength" class="alert alert-warning">Zip code must be 4-6 digit long and should contain numbers only</span>
+										<span ng-show="farmerSignUpForm.fZip.$error.required && farmerSignUpForm.fZip.$dirty" class="alert alert-danger">Zip code is required</span>
+    								</span>	
+								</div>	
+								<div>
+									<input type="file" ngf-select ng-model="file" name="videoFile" ngf-pattern="'video/mp4'" accept="video/mp4" ngf-max-size="20MB" required/>
+
+								</div>
+								<div>
+																	<span style="color:red;">{{serverError}}</span>
+								</div>
+								
+								
+								<div>
+								</div>
+								
+								<div class="doit">
+									<input type="submit"
+										id="submit_button" value="Sign Up" ng-click="farmerSignUp()" ng-disabled="farmerSignUpForm.$invalid">
+								</div>
+								
+						</form>
+					</div>
+					
+					
+					<div ng-show="customerSignUpForm_Show">
+						<form id="customerSignUpForm" name="customerSignUpForm">
+							
+								<div>
+									<input type="text" class="pad_upc" id="cSSN"
+									name="cSSN" ng-model="customer.cSSN" autocomplete="on"
+									autofocus placeholder="Customer SSN 123-45-5678 *" 
+									ng-maxlength=11 ng-minlength=11 maxlength=11 ng-pattern="/^[0-9]{3}\-[0-9]{2}\-[0-9]{4}$/" required>
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span ng-show="customerSignUpForm.cSSN.$error.pattern || customerSignUpForm.cSSN.$error.maxlength || customerSignUpForm.cSSN.$error.minlength" class="alert alert-warning">SSN must be 9 digit long and contain numbers only</span>
+										<span ng-show="customerSignUpForm.cSSN.$error.required && customerSignUpForm.cSSN.$dirty" class="alert alert-danger">SSN is required</span>
+    								</span>	
+								</div>
+								
+								<div>
+									<input type="text" class="pad_upc" id="cEmail"
+										 name="cEmail" ng-model="customer.cEmail" autocomplete="on"
+										  autofocus aria-required="true" placeholder="Email *" 
+										  maxlength=30 ng-pattern="/[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}/" required>
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span ng-show="customerSignUpForm.cEmail.$error.pattern" class="alert alert-warning">Please enter valid email</span>
+    									<span ng-show="customerSignUpForm.cEmail.$error.required && customerSignUpForm.cEmail.$dirty" class="alert alert-danger">Email is required</span>
+    								</span>	
+								</div>
+								
+								<div>
+									<input type="password" class="pad_upc" id="cPassword"
+										 name="cPassword" ng-model="customer.cPassword" autocomplete="on"
+										  autofocus aria-required="true" placeholder="Password *" 
+										  maxlength=30 ng-pattern="/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*([-+_!@#$%^&*.,?])).{5,7}/" required>
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span ng-show="customerSignUpForm.cPassword.$error.pattern" class="alert alert-warning">Password must contain a Number, Capital Letter, Small Letter and Special Character</span>
+    									<span ng-show="customerSignUpForm.cPassword.$error.required && customerSignUpForm.cPassword.$dirty" class="alert alert-danger">Password is required</span>
+    								</span>	
+								</div>
+								
+								<div>
+									<input type="text" class="pad_upc" id="cFirstName"
+									name="cFirstName" ng-model="customer.cFirstName" autocomplete="on"
+									autofocus aria-required="true" placeholder="First Name *" 
+									maxlength=20 ng-pattern="/^[A-Za-z ]*$/" required>
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span ng-show="customerSignUpForm.cFirstName.$error.pattern" class="alert alert-warning">First name must contain letters only</span>
+    									<span ng-show="customerSignUpForm.cFirstName.$error.required && customerSignUpForm.cFirstName.$dirty" class="alert alert-danger">First name is required</span>
+    								</span>	
+								</div>
+									
+								<div>
+									<input type="text" class="pad_upc" id="cLastName"
+									name="cLastName" ng-model="customer.cLastName" autocomplete="on"
+									autofocus aria-required="true" placeholder="Last Name *" 
+									maxlength=20 ng-pattern="/^[A-Za-z ]*$/" required>
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span ng-show="customerSignUpForm.cLastName.$error.pattern" class="alert alert-warning">Last name must contain letters only</span>
+    									<span ng-show="customerSignUpForm.cLastName.$error.required && customerSignUpForm.cLastName.$dirty" class="alert alert-danger">Last name is required</span>
+    								</span>	
+								</div>	
+								
+								<div>
+									<input type="text" class="pad_upc"
+										 name="cPhoneNumber" ng-model="customer.cPhoneNumber" autocomplete="on"
+										  autofocus aria-required="true" placeholder="Phone Number *" 
+										  ng-maxlength=10 ng-minlength=10 maxlength=10 ng-pattern="/[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}/" required>
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span ng-show="customerSignUpForm.cPhoneNumber.$error.pattern || customerSignUpForm.cPhoneNumber.$error.maxlength || customerSignUpForm.cPhoneNumber.$error.minlength" class="alert alert-warning">Phone number must be 10 digit long and should contain numbers only</span>
+										<span ng-show="customerSignUpForm.cPhoneNumber.$error.required && customerSignUpForm.cPhoneNumber.$dirty" class="alert alert-danger">Phone number is required</span>
+    								</span>	
+								</div>		
+								
+								
+								<div>
+									<input type="text" class="pad_upc"
+										 name="cAddress" ng-model="customer.cAddress" autocomplete="on"
+										  autofocus aria-required="true" placeholder="Address *" 
+										  maxlength=40 ng-pattern="/[A-Za-z0-9. ]/" required>
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+											<span ng-show="customerSignUpForm.cAddress.$error.required && customerSignUpForm.cAddress.$dirty" class="alert alert-danger">Address is required</span>
+    									</span>
+    								</span>		
+								</div>	
+								
+								<div>
+									<input type="text" class="pad_upc"
+										 name="cCity" ng-model="customer.cCity" autocomplete="on"
+										  autofocus aria-required="true" placeholder="City *" 
+										  maxlength=20 ng-pattern="/^[A-Za-z ]*$/" required>
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span ng-show="customerSignUpForm.cCity.$error.pattern" class="alert alert-warning">City name must contain letters only</span>
+										<span ng-show="customerSignUpForm.cCity.$error.required && customerSignUpForm.cCity.$dirty" class="alert alert-danger">City name is required</span>
+    								</span>		
+								</div>	
+								
+								<div>
+								
+									<select name="cState" ng-model="customer.cState" required>
+      						<option value="">---Select State---</option>
+      						<option value="AL">AL</option>
+      						<option value="AK">AK</option>
+      						<option value="AZ">AZ</option>
+      						<option value="AR">AR</option>
+      						<option value="CA">CA</option>
+      						<option value="CO">CO</option>
+      						<option value="CT">CT</option>
+      						<option value="DE">DE</option>
+      						<option value="FL">FL</option>
+      						<option value="GA">GA</option>
+      						<option value="HI">HI</option>
+      						<option value="ID">ID</option>
+      						<option value="IL">IL</option>
+      						<option value="IN">IN</option>
+      						<option value="IA">IA</option>
+      						<option value="KS">KS</option>
+      						<option value="KY">KY</option>
+      						<option value="LA">LA</option>
+      						<option value="ME">ME</option>
+      						<option value="MD">MD</option>
+      						<option value="MA">MA</option>
+      						<option value="MI">MI</option>
+      						<option value="MN">MN</option>
+      						<option value="MS">MS</option>
+      						<option value="MO">MO</option>
+      						<option value="MT">MT</option>
+      						<option value="NE">NE</option>
+      						<option value="NV">NV</option>
+      						<option value="NH">NH</option>
+      						<option value="NJ">NJ</option>
+      						<option value="NM">NM</option>
+      						<option value="NY">NY</option>
+      						<option value="NC">NC</option>
+      						<option value="ND">ND</option>
+      						<option value="OH">OH</option>
+      						<option value="OK">OK</option>
+      						<option value="OR">OR</option>
+      						<option value="PA">PA</option>
+      						<option value="RI">RI</option>
+      						<option value="SC">SC</option>
+      						<option value="SD">SD</option>
+      						<option value="TN">TN</option>
+      						<option value="TX">TX</option>
+      						<option value="UT">UT</option>
+      						<option value="VT">VT</option>
+      						<option value="">VA</option>
+      						<option value="WA">WA</option>
+      						<option value="WV">WV</option>
+      						<option value="WI">WI</option>
+      						<option value="WY">WY</option>
+      						<option value="DC">DC</option>
+    					</select>
+    	
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span ng-show="customerSignUpForm.cState.$error.required && customerSignUpForm.cState.$dirty" class="alert alert-danger">State name is required</span>
+    								</span>		
+								</div>	
+								
+								<div>
+									<input type="text" class="pad_upc"
+										 name="cZip" ng-model="customer.cZip" autocomplete="on"
+										  autofocus aria-required="true" placeholder="Zip Code *" 
+										  ng-minlength=5 ng-maxlength=5 maxlength=5 ng-pattern="/^\d+$/" required>
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span ng-show="customerSignUpForm.cZip.$error.pattern || customerSignUpForm.cZip.$error.maxlength || customerSignUpForm.cZip.$error.minlength" class="alert alert-warning">Zip code must be 4-6 digit long and should contain numbers only</span>
+										<span ng-show="customerSignUpForm.cZip.$error.required && customerSignUpForm.cZip.$dirty" class="alert alert-danger">Zip code is required</span>
+    								</span>	
+								</div>	
+								
+								<h3 class="credit_card">Credit Card Details</h3>
+								
+								<div>
+									<input type="text" class="pad_upc" name="cCreditCardNumber" ng-model="customer.cCreditCardNumber" maxlength="19" placeholder="Credit Card Number *" autocomplete=off  ng-minlength=16 ng-maxlength=19 maxlength=19 ng-pattern="/^\d+$/" required>
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span ng-show="customerSignUpForm.cCreditCardNumber.$error.pattern || customerSignUpForm.cCreditCardNumber.$error.maxlength || customerSignUpForm.cCreditCardNumber.$error.minlength" class="alert alert-warning">Card number must be 16-19 digit long and should contain numbers only</span>
+										<span ng-show="customerSignUpForm.cCreditCardNumber.$error.required && customerSignUpForm.cCreditCardNumber.$dirty" class="alert alert-danger">Card number is required</span>
+    								</span>	
+								</div>
+								
+								<div>
+									<input type="password" class="pad_upc" name="cCreditCardSC" ng-model="customer.cCreditCardSC" placeholder="CCV *" autocomplete=off required ng-minlength=3 ng-maxlength=3 maxlength=3 ng-pattern="/^\d+$/" >
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span ng-show="customerSignUpForm.cCreditCardSC.$error.pattern || customerSignUpForm.cCreditCardSC.$error.maxlength || customerSignUpForm.cCreditCardSC.$error.minlength" class="alert alert-warning">Security Code must be 3 digit long and should contain numbers only</span>
+										<span ng-show="customerSignUpForm.cCreditCardSC.$error.required && customerSignUpForm.cCreditCardSC.$dirty" class="alert alert-danger">Security code is required</span>
+    								</span>	
+								</div>
+								
+								<div>
+									<select ng-model="customer.cCreditCardMonth" name="cCreditCardMonth"  required autocomplete=off >
+										<option value="">---Expiration month---</option>
+      									<option value="01">January</option>
+      									<option value="02">Feburary</option>
+      									<option value="03">March</option>
+      									<option value="04">April</option>
+      									<option value="05">May</option>
+      									<option value="06">June</option>
+      									<option value="07">July</option>
+      									<option value="08">August</option>
+      									<option value="09">September</option>
+      									<option value="10">October</option>
+      									<option value="11">November</option>
+      									<option value="12">December</option>
+									</select>
+									
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span ng-show="customerSignUpForm.cCreditCardMonth.$error.required && customerSignUpForm.cCreditCardMonth.$dirty" class="alert alert-danger">Credit Card Month is required</span>
+    								</span>	
+									
+								</div>
+					
+								<div>
+									<select ng-model="customer.cCreditCardYear" name="cCreditCardYear" required autocomplete=off>
+										<option value="">---Expiration year---</option>
+      									<option value="2016">2016</option>
+      									<option value="2017">2017</option>
+      									<option value="2018">2018</option>
+      									<option value="2019">2019</option>
+      									<option value="2020">2020</option>
+      									<option value="2021">2021</option>
+      									<option value="2022">2022</option>
+									</select>
+									
+									<span>
+										<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+										<span ng-show="customerSignUpForm.cCreditCardYear.$error.required && customerSignUpForm.cCreditCardYear.$dirty" class="alert alert-danger">Credit Card Year is required</span>
+    								</span>	
+									
+								</div>
+								
+								<div>
+								<span style="color:red">{{serverError}}</span>
+								</div>
+								
+								<div class="doit">
+									<input type="submit"
+										id="submit_button" value="Sign Up" ng-click="customerSignUp()" ng-disabled="customerSignUpForm.$invalid">
+								</div>
+								
+						</form>
+					</div>
+					
+					
+				<div>	
+			</div>
+		</div>
+	</div>
+		<!-- close optional disable page div -->
+	</div>
+	<div id="refreshFooter">
+		<div id="copyrightAndDisclaimer">&copy; 2007-2016 AmazonFresh,
+			LLC or its affiliates &nbsp; All items sold by and ship from
+			AmazonFresh unless otherwise specified.</div>
+	</div>
+
+</body>
+
+</html>
+
